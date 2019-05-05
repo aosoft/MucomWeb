@@ -1,0 +1,3 @@
+[submodule "mucom88"]
+	path = mucom88
+	url = https://github.com/aosoft/mucom88.git
