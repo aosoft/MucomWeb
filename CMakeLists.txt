@@ -12,6 +12,8 @@ file(GLOB SOURCES
         mucom88/src/plugin/*.cpp
         mucom88/src/Z80/*.cpp)
 
+file (GLOB HTML_SOURCES html/*.*)
+
 list(FILTER SOURCES EXCLUDE REGEX "/mucom88/src/mucomerror.cpp")
 
 if (EMSCRIPTEN)
@@ -25,6 +27,8 @@ if (EMSCRIPTEN)
 
     set(CMAKE_CXX_FLAGS_DEBUG "-g4")
 endif()
+
+file(COPY ${HTML_SOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 
