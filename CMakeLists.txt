@@ -10,7 +10,8 @@ file(GLOB SOURCES
         mucom88/src/fmgen/*.cpp
         mucom88/src/module/*.cpp
         mucom88/src/plugin/*.cpp
-        mucom88/src/Z80/*.cpp)
+        mucom88/src/Z80/*.cpp
+        src/*.cpp)
 
 file (GLOB HTML_SOURCES html/*.*)
 
@@ -20,9 +21,9 @@ if (EMSCRIPTEN)
     list(FILTER SOURCES EXCLUDE REGEX "/mucom88/src/main.cpp")
 
     if (WEB_BROWSER)
-        set(CMAKE_CXX_FLAGS "--pre-js ${PROJECT_SOURCE_DIR}/mucom88/clion/EmPre.js --post-js ${PROJECT_SOURCE_DIR}/mucom88/clion/EmPost.js -s WASM=0")
+        set(CMAKE_CXX_FLAGS "--bind --pre-js ${PROJECT_SOURCE_DIR}/mucom88/clion/EmPre.js --post-js ${PROJECT_SOURCE_DIR}/mucom88/clion/EmPost.js -s WASM=0")
     else()
-        set(CMAKE_CXX_FLAGS "-s NODERAWFS=1 -s WASM=0")
+        set(CMAKE_CXX_FLAGS "--bind -s NODERAWFS=1 -s WASM=0")
     endif()
 
     set(CMAKE_CXX_FLAGS_DEBUG "-g4")
@@ -35,4 +36,5 @@ add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
 target_include_directories(${CMAKE_PROJECT_NAME}
         PRIVATE ${SDL_INCLUDE_DIR}
         PRIVATE mucom88/src
-        PRIVATE mucom88/src/module)
+        PRIVATE mucom88/src/module
+        PRIVATE src)

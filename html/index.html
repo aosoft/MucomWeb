@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MUCOM88 Web</title>
+</head>
+<body>
+
+<textarea id="mml" cols="80" rows="20"></textarea>
+<p/>
+<button id="btnCompile">Compile</button>
+<p/>
+<div id="result" />
+<script type="module">
+  import Module from './mucom88.js';
+  document.getElementById('btnCompile').addEventListener('click', function() {
+      var mml = document.getElementById('mml').value;
+      document.getElementById('result').innerText = Module.CompileMML(mml);
+  });
+</script>
+</body>
+</html>
