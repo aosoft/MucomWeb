@@ -21,7 +21,7 @@ if (EMSCRIPTEN)
     list(FILTER SOURCES EXCLUDE REGEX "/mucom88/src/main.cpp")
 
     if (WEB_BROWSER)
-        set(CMAKE_CXX_FLAGS "--bind --pre-js ${PROJECT_SOURCE_DIR}/mucom88/clion/EmPre.js --post-js ${PROJECT_SOURCE_DIR}/mucom88/clion/EmPost.js -s WASM=0")
+        set(CMAKE_CXX_FLAGS "--bind -s WASM=0")
     else()
         set(CMAKE_CXX_FLAGS "--bind -s NODERAWFS=1 -s WASM=0")
     endif()
@@ -32,6 +32,12 @@ endif()
 file(COPY ${HTML_SOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(${CMAKE_PROJECT_NAME} ${SOURCES})
+
+if (EMSCRIPTEN)
+    add_custom_command(
+        TARGET ${CMAKE_PROJECT_NAME} POST_BUILD
+        COMMAND python ARGS "${PROJECT_SOURCE_DIR}/mucom88/clion/PostBuild.py" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.js")
+endif()
 
 target_include_directories(${CMAKE_PROJECT_NAME}
         PRIVATE ${SDL_INCLUDE_DIR}
