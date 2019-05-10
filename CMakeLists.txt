@@ -21,7 +21,7 @@ if (EMSCRIPTEN)
     list(FILTER SOURCES EXCLUDE REGEX "/mucom88/src/main.cpp")
 
     if (WEB_BROWSER)
-        set(CMAKE_CXX_FLAGS "--bind -s WASM=0")
+        set(CMAKE_CXX_FLAGS "--bind -s FORCE_FILESYSTEM=1 -s WASM=0")
     else()
         set(CMAKE_CXX_FLAGS "--bind -s NODERAWFS=1 -s WASM=0")
     endif()

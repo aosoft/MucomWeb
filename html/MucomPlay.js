@@ -1,10 +1,12 @@
 'use strict';
 
+import Module from './mucom88.js';
+
 const context = new AudioContext();
 
 document.addEventListener('DOMContentLoaded', () => {
     context.audioWorklet.addModule('./MucomProcessor.js').then(() => {
-        document.querySelector('button').addEventListener('click', async (event) => {
+        document.getElementById('btnPlay').addEventListener('click', async (event) => {
             const kernel = new Module.MucomAudioWorkletKernel();
             kernel.initializeMucom();
             const soundGenerator = new AudioWorkletNode(context,
