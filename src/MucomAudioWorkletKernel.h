@@ -11,14 +11,19 @@ private:
 
 	CMucom _mucom;
 	std::vector<std::int16_t> _audioBuffer;
+	std::vector<float> _audioBufferL;
+	std::vector<float> _audioBufferR;
 
 public:
 	MucomAudioWorkletKernel();
 
 	bool InitializeMucom();
+	void InitializeAudioBuffer();
 
-	std::uintptr_t GetAudioBufferPtr() const;
-	size_t GetAudioBufferSize() const;
+	std::uintptr_t GetAudioBufferPtrL() const;
+	size_t GetAudioBufferSizeL() const;
+	std::uintptr_t GetAudioBufferPtrR() const;
+	size_t GetAudioBufferSizeR() const;
 
 	void Mix();
 };

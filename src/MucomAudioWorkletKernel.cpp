@@ -13,22 +13,42 @@ bool MucomAudioWorkletKernel::InitializeMucom()
 		return false;
 	}
 
-	_audioBuffer.resize(2 * AudioSampleCount);
-
 	return true;
 }
 
-std::uintptr_t MucomAudioWorkletKernel::GetAudioBufferPtr() const
+void MucomAudioWorkletKernel::InitializeAudioBuffer()
 {
-	return reinterpret_cast<std::uintptr_t >(_audioBuffer.size() > 0 ? &_audioBuffer[0] : nullptr);
+	_audioBuffer.resize(2 * AudioSampleCount);
+	_audioBufferL.resize(AudioSampleCount);
+	_audioBufferR.resize(AudioSampleCount);
 }
 
-size_t MucomAudioWorkletKernel::GetAudioBufferSize() const
+std::uintptr_t MucomAudioWorkletKernel::GetAudioBufferPtrL() const
 {
-	return _audioBuffer.size();
+	return reinterpret_cast<std::uintptr_t >(_audioBufferL.size() > 0 ? &_audioBufferL[0] : nullptr);
+}
+
+size_t MucomAudioWorkletKernel::GetAudioBufferSizeL() const
+{
+	return _audioBufferL.size();
+}
+
+std::uintptr_t MucomAudioWorkletKernel::GetAudioBufferPtrR() const
+{
+	return reinterpret_cast<std::uintptr_t >(_audioBufferR.size() > 0 ? &_audioBufferR[0] : nullptr);
+}
+
+size_t MucomAudioWorkletKernel::GetAudioBufferSizeR() const
+{
+	return _audioBufferR.size();
 }
 
 void MucomAudioWorkletKernel::Mix()
 {
 	_mucom.RenderAudio(&_audioBuffer[0], AudioSampleCount);
+	for (size_t i = 0; i < AudioSampleCount; i++)
+	{
+		_audioBufferL[i] = static_cast<float>(_audioBuffer[i * 2]) / 32767.0f;
+		_audioBufferR[i] = static_cast<float>(_audioBuffer[i * 2 + 1]) / 32767.0f;
+	}
 }

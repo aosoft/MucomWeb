@@ -24,8 +24,11 @@ EMSCRIPTEN_BINDINGS(mucom88)
 	emscripten::function("CompileMML", &CompileMML);
 	emscripten::class_<MucomAudioWorkletKernel>("MucomAudioWorkletKernel")
 		.constructor()
-		.function("InitializeMucom",&MucomAudioWorkletKernel::InitializeMucom, emscripten::allow_raw_pointers())
-		.function("GetAudioBufferPtr", &MucomAudioWorkletKernel::GetAudioBufferPtr, emscripten::allow_raw_pointers())
-		.function("GetAudioBufferSize", &MucomAudioWorkletKernel::GetAudioBufferSize)
-		.function("Mix", &MucomAudioWorkletKernel::Mix);
+		.function("initializeMucom",&MucomAudioWorkletKernel::InitializeMucom, emscripten::allow_raw_pointers())
+		.function("initializeAudioBuffer",&MucomAudioWorkletKernel::InitializeAudioBuffer)
+		.function("getAudioBufferPtrL", &MucomAudioWorkletKernel::GetAudioBufferPtrL, emscripten::allow_raw_pointers())
+		.function("getAudioBufferSizeL", &MucomAudioWorkletKernel::GetAudioBufferSizeL)
+		.function("getAudioBufferPtrR", &MucomAudioWorkletKernel::GetAudioBufferPtrR, emscripten::allow_raw_pointers())
+		.function("getAudioBufferSizeR", &MucomAudioWorkletKernel::GetAudioBufferSizeR)
+		.function("mix", &MucomAudioWorkletKernel::Mix);
 }
