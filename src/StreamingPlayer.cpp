@@ -15,19 +15,11 @@ StreamingPlayer::StreamingPlayer(FnStreamingPlayerCallback callback) :
 	alGetError();
 
 	alGenBuffers(2, _buffers);
-	alGenSources(1, &_source);
-
-	alSourcef(_source, AL_GAIN, 1);
-	alSource3f(_source, AL_POSITION, 0, 0, 0);
 }
 
 StreamingPlayer::~StreamingPlayer()
 {
 	Stop();
-	if (_source != 0)
-	{
-		alDeleteSources(1, &_source);
-	}
 	if (_buffers[0] != 0)
 	{
 		alDeleteBuffers(2, _buffers);
@@ -46,6 +38,14 @@ void StreamingPlayer::Play()
 {
 	if (!_isPlaying)
 	{
+		if (_source != 0)
+		{
+			alDeleteSources(1, &_source);
+		}
+		alGenSources(1, &_source);
+		alSourcef(_source, AL_GAIN, 1);
+		alSource3f(_source, AL_POSITION, 0, 0, 0);
+
 		for (auto buf : _buffers)
 		{
 			InternalProcess(buf);
@@ -60,6 +60,11 @@ void StreamingPlayer::Stop()
 	if (_isPlaying)
 	{
 		alSourceStop(_source);
+		if (_source != 0)
+		{
+			alDeleteSources(1, &_source);
+		}
+
 		_isPlaying = false;
 	}
 }
