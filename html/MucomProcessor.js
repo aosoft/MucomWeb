@@ -3,16 +3,20 @@
 import Module from './mucom88.js';
 
 class MucomProcessor extends AudioWorkletProcessor {
-    constructor(options) {
-        super(options);
-
-        this.n = 0;
-        this.kernel = options.processorOptions;
-        this.kernel.initializeAudioBuffer();
+    constructor() {
+        super();
     }
 
-    process(inputs, outputs) {
-        this.kernel.mix();
+    static get parameterDescriptors() {
+        return [{
+            name: 'kernel',
+            defaultValue: null
+        }];
+    }
+
+    process(inputs, outputs, parameters) {
+        const kernel = parameters.kernel;
+        kernel.mix();
 
         const output = outputs[0];
         output[0] = this.kernel.getAudioBufferPtrL();
