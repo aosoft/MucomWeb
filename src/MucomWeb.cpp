@@ -7,7 +7,6 @@
 #include "StreamingPlayer.h"
 
 static const int ChannelCount = 2;
-static const int SampleRate = 44100;
 static const int SamplesPerBlock = 16;
 static const int BlockCount = 1000;
 static const int SamplesPerBuffer = SamplesPerBlock * BlockCount;
@@ -33,7 +32,7 @@ int main()
 	return 0;
 }
 
-void Process(ALuint buffer)
+void Process(ALuint buffer, int sampleRate)
 {
 	short temp[SamplesPerBuffer * ChannelCount];
 	int32_t temp2[SamplesPerBlock * ChannelCount];
@@ -48,10 +47,10 @@ void Process(ALuint buffer)
 			p++;
 		}
 	}
-	alBufferData(buffer, AL_FORMAT_STEREO16, temp, sizeof(temp), SampleRate);
+	alBufferData(buffer, AL_FORMAT_STEREO16, temp, sizeof(temp), sampleRate);
 }
 
-std::string CompileMML(const std::string& mml)
+std::string CompileMML(const std::string& mml, int sampleRate)
 {
 	static const char *mubPath = "/mucom.mub";
 
@@ -67,12 +66,12 @@ std::string CompileMML(const std::string& mml)
 		g_player->Stop();
 		g_mucom = nullptr;
 		g_mucom = std::make_unique<CMucom>();
-		g_mucom->Init(nullptr, MUCOM_CMPOPT_STEP, SampleRate);
+		g_mucom->Init(nullptr, MUCOM_CMPOPT_STEP, sampleRate);
 		g_mucom->Reset(0);
 		if (g_mucom->LoadMusic(mubPath) >= 0 &&
 			g_mucom->Play(0) >= 0)
 		{
-			g_player->Play();
+			g_player->Play(sampleRate);
 		}
 	}
 	return std::string(mucomCompiler.GetMessageBuffer());

@@ -6,6 +6,7 @@ StreamingPlayer::StreamingPlayer(FnStreamingPlayerCallback callback) :
 	_device(nullptr),
 	_context(nullptr),
 	_source(0),
+	_sampleRate(0),
 	_isPlaying(false)
 {
 	_device = alcOpenDevice(nullptr);
@@ -34,7 +35,7 @@ StreamingPlayer::~StreamingPlayer()
 	}
 }
 
-void StreamingPlayer::Play()
+void StreamingPlayer::Play(int sampleRate)
 {
 	if (!_isPlaying)
 	{
@@ -45,6 +46,7 @@ void StreamingPlayer::Play()
 		alGenSources(1, &_source);
 		alSourcef(_source, AL_GAIN, 1);
 		alSource3f(_source, AL_POSITION, 0, 0, 0);
+		_sampleRate = sampleRate;
 
 		for (auto buf : _buffers)
 		{
@@ -88,6 +90,6 @@ void StreamingPlayer::Process()
 
 void StreamingPlayer::InternalProcess(ALuint buffer)
 {
-	(*_callback)(buffer);
+	(*_callback)(buffer, _sampleRate);
 	alSourceQueueBuffers(_source, 1, &buffer);
 }

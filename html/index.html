@@ -17,6 +17,13 @@
 <button id="btnCompile">Compile / Play</button>
 <button id="btnStop">Stop</button>
 <p/>
+<input type="radio" name="srate" value="55467" checked="checked">55kHz</input>
+<input type="radio" name="srate" value="48000">48kHz</input>
+<input type="radio" name="srate" value="44100">44kHz</input>
+<input type="radio" name="srate" value="24000">24kHz</input>
+<input type="radio" name="srate" value="22050">22kHz</input>
+<input type="radio" name="srate" value="12000">12kHz</input>
+<p/>
 <div style="font-size: small;">
   <a href="https://github.com/onitama/mucom88" target="_blank">OPEN MUCOM88</a> /
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja" target="_blank">CC BY-NC-SA 4.0</a> /
@@ -27,8 +34,17 @@
 <script type="module">
   import Module from './mucom88.js';
   document.getElementById('btnCompile').addEventListener('click', function() {
+      var radios = document.getElementsByName('srate');
+      var rate = 44100;
+      for (var i = 0; i < radios.length; i++) {
+          if (radios[i].checked) {
+            rate = parseInt(radios[i].value);
+            break;
+          }
+      }
+
       var mml = document.getElementById('mml').value;
-      document.getElementById('result').innerText = Module.compileMML(mml);
+      document.getElementById('result').innerText = Module.compileMML(mml, rate);
   });
   document.getElementById('btnStop').addEventListener('click', function() {
       Module.stopMusic();

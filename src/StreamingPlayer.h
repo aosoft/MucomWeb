@@ -5,7 +5,7 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
-typedef void (*FnStreamingPlayerCallback)(ALuint buffer);
+typedef void (*FnStreamingPlayerCallback)(ALuint buffer, int sampleRate);
 
 class StreamingPlayer
 {
@@ -16,6 +16,7 @@ private:
 	ALCcontext *_context;
 	ALuint _buffers[BufferCount];
 	ALuint _source;
+	int _sampleRate;
 
 	bool _isPlaying;
 	FnStreamingPlayerCallback _callback;
@@ -28,7 +29,7 @@ public:
 		return _isPlaying;
 	}
 
-	void Play();
+	void Play(int sampleRate);
 	void Stop();
 	void Process();
 
