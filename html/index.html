@@ -14,7 +14,8 @@
 
 <textarea id="mml" cols="80" rows="20"></textarea>
 <p/>
-<button id="btnCompile">Compile</button>
+<button id="btnCompile">Compile / Play</button>
+<button id="btnStop">Stop</button>
 <p/>
 <div style="font-size: small;">
   <a href="https://github.com/onitama/mucom88" target="_blank">OPEN MUCOM88</a> /
@@ -27,7 +28,10 @@
   import Module from './mucom88.js';
   document.getElementById('btnCompile').addEventListener('click', function() {
       var mml = document.getElementById('mml').value;
-      document.getElementById('result').innerText = Module.CompileMML(mml);
+      document.getElementById('result').innerText = Module.compileMML(mml);
+  });
+  document.getElementById('btnStop').addEventListener('click', function() {
+      Module.stopMusic();
   });
 </script>
 </body>

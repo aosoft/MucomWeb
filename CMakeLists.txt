@@ -27,6 +27,7 @@ if (EMSCRIPTEN)
     endif()
 
     set(CMAKE_CXX_FLAGS_DEBUG "-g4")
+    set(CMAKE_CXX_FLAGS_RELEASE  "-Oz --llvm-lto 1")
 endif()
 
 file(COPY ${HTML_SOURCES} DESTINATION ${CMAKE_CURRENT_BINARY_DIR})

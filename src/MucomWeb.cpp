@@ -78,7 +78,16 @@ std::string CompileMML(const std::string& mml)
 	return std::string(mucomCompiler.GetMessageBuffer());
 }
 
+void StopMusic()
+{
+	if (g_player != nullptr)
+	{
+		g_player->Stop();
+	}
+}
+
 EMSCRIPTEN_BINDINGS(mucom88)
 {
-	emscripten::function("CompileMML", &CompileMML);
+	emscripten::function("compileMML", &CompileMML);
+	emscripten::function("stopMusic", &StopMusic);
 }
