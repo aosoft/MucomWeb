@@ -11,7 +11,7 @@
   a:active { color: #0000ff; }
 </style>
 <body>
-
+<h1 style="font-size: 125%">MUCOM88 on Web</h1>
 <textarea id="mml" cols="80" rows="20"></textarea>
 <p/>
 <button id="btnCompile">Compile / Play</button>
@@ -32,9 +32,18 @@
   <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/deed.ja" target="_blank">CC BY-NC-SA 4.0</a>
 </div>
 <p/>
+<div>
+  <button id="btnClearMML">Clear MML</button>
+  <p/>
+  Sample MML
+  <a href="javascript:void(0);" id="dlSampl2">sampl2.muc</a>
+  <a href="javascript:void(0);" id="dlSampl3">sampl3.muc</a>
+  Copyright(C) by Yuzo Koshiro
+</div>
 <div id="result" />
 <script type="module">
   import Module from './mucom88.js';
+
   document.getElementById('btnCompile').addEventListener('click', function() {
       var radios = document.getElementsByName('srate');
       var rate = 44100;
@@ -48,8 +57,31 @@
       var mml = document.getElementById('mml').value;
       document.getElementById('result').innerText = Module.compileMML(mml, rate);
   });
+
   document.getElementById('btnStop').addEventListener('click', function() {
       Module.stopMusic();
+  });
+
+  document.getElementById('btnClearMML').addEventListener('click', function() {
+      document.getElementById('mml').value = '';
+  });
+
+  function downloadMML(url) {
+      fetch(url)
+          .then(response => {
+              return response.text()
+          })
+          .then(text => {
+              document.getElementById('mml').value = text;
+          });
+  }
+
+  document.getElementById('dlSampl2').addEventListener('click', function() {
+      downloadMML('https://raw.githubusercontent.com/onitama/mucom88/master/package/sampl2.muc');
+  });
+
+  document.getElementById('dlSampl3').addEventListener('click', function() {
+      downloadMML('https://raw.githubusercontent.com/onitama/mucom88/master/package/sampl3.muc');
   });
 </script>
 </body>
