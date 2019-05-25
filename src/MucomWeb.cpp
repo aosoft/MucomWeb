@@ -2,18 +2,19 @@
 #include <emscripten/bind.h>
 
 #include <memory>
+#include <vector>
 #include <string>
 #include "mucom_module.h"
 #include "StreamingPlayer.h"
 
 static const int ChannelCount = 2;
 static const int SamplesPerBlock = 16;
-static const int BlockCount = 1000;
-static const int SamplesPerBuffer = SamplesPerBlock * BlockCount;
-
+static const int BufferSampleCount = 32000;
 
 std::unique_ptr<StreamingPlayer> g_player;
 std::unique_ptr<CMucom> g_mucom;
+
+std::vector<short> g_audioBuffer;
 
 void MainLoop()
 {
@@ -25,6 +26,7 @@ void MainLoop()
 
 int main()
 {
+	g_audioBuffer.resize(BufferSampleCount * ChannelCount);
 	emscripten_set_main_loop(MainLoop, 60, 1);
 	g_player.release();
 	g_mucom.release();
@@ -34,11 +36,13 @@ int main()
 
 void Process(ALuint buffer, int sampleRate)
 {
-	short temp[SamplesPerBuffer * ChannelCount];
 	int32_t temp2[SamplesPerBlock * ChannelCount];
 
-	short *p = temp;
-	for (int n = 0; n < BlockCount; n++)
+	int32_t processSampleCount = std::min(BufferSampleCount, (sampleRate + 3) / 4);
+	int32_t blockCount = (processSampleCount + (SamplesPerBlock - 1)) / SamplesPerBlock;
+
+	short *p = &g_audioBuffer[0];
+	for (int n = 0; n < blockCount; n++)
 	{
 		g_mucom->RenderAudio(temp2, SamplesPerBlock);
 		for (int i = 0; i < SamplesPerBlock * ChannelCount; i++)
@@ -47,7 +51,9 @@ void Process(ALuint buffer, int sampleRate)
 			p++;
 		}
 	}
-	alBufferData(buffer, AL_FORMAT_STEREO16, temp, sizeof(temp), sampleRate);
+	alBufferData(
+			buffer, AL_FORMAT_STEREO16, &g_audioBuffer[0],
+			blockCount * SamplesPerBlock * ChannelCount * sizeof(short), sampleRate);
 }
 
 std::string CompileMML(const std::string& mml, int sampleRate)
